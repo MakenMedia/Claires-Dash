@@ -8,6 +8,7 @@ import EditedVideos from '@/components/EditedVideos';
 import ClientTaskBoards from '@/components/ClientTaskBoards';
 import FrameioFolders from '@/components/FrameioFolders';
 import EditorProfiles from '@/components/EditorProfiles';
+import SopSection from '@/components/SopSection';
 import { CLIENTS } from '@/lib/config';
 
 const POLL_CLICKUP = parseInt(process.env.NEXT_PUBLIC_POLL_CLICKUP_MS || '60000');
@@ -198,6 +199,7 @@ export default function Home() {
         <ClientTaskBoards boards={clickup?.clientBoards || []} fetchedAt={clickup?.fetchedAt || null} fetching={fetchingClickup} />
         <FrameioFolders folders={frameio?.folders || CLIENTS.map(c => ({ client: c.name, frameLink: c.frameLink }))} fetchedAt={frameio?.fetchedAt || null} fetching={fetchingFrameio} />
         <EditorProfiles profiles={editors?.profiles || []} fetchedAt={editors?.fetchedAt || null} fetching={fetchingEditors} />
+        <SopSection />
       </div>
     </>
   );
