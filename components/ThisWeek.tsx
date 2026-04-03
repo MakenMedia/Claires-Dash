@@ -1,6 +1,9 @@
 'use client';
 
-interface CalEvent { id: string; title?: string; summary?: string; start: string; end: string; allDay?: boolean; }
+interface CalEvent {
+  id: string; title?: string; summary?: string; start: string; end: string;
+  allDay?: boolean; folderName?: string; listName?: string; url?: string; isOverdue?: boolean;
+}
 interface Props { events: CalEvent[]; fetchedAt: number | null; fetching: boolean; }
 
 export default function ThisWeek({ events, fetchedAt, fetching }: Props) {
@@ -25,7 +28,7 @@ export default function ThisWeek({ events, fetchedAt, fetching }: Props) {
         <div className="card-title">
           <div className="icon" style={{ background: '#5b6af020' }}>📅</div>
           This Week
-          <span className="badge">{events.length} events</span>
+          <span className="badge">{events.length} tasks due</span>
           {fetching && <div className="spinner" style={{ width: 14, height: 14 }} />}
         </div>
         {fetchedAt && (
@@ -46,15 +49,17 @@ export default function ThisWeek({ events, fetchedAt, fetching }: Props) {
                 {dayEvents.length === 0
                   ? <div className="cal-empty">—</div>
                   : dayEvents.map(e => {
-                      const t = e.allDay ? null : (() => {
-                        try { return new Date(e.start).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }); }
-                        catch { return null; }
-                      })();
+                      const breadcrumb = [e.folderName, e.listName].filter(Boolean).join(' › ');
+                      const Wrapper = e.url ? 'a' : 'div';
+                      const wrapperProps = e.url
+                        ? { href: e.url, target: '_blank', rel: 'noopener noreferrer', style: { textDecoration: 'none' } }
+                        : {};
                       return (
-                        <div key={e.id} className="cal-event" title={e.summary || e.title}>
-                          {t && <span className="cal-event-time">{t}</span>}
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        <Wrapper key={e.id} className="cal-event" title={e.summary || e.title} {...(wrapperProps as any)}>
+                          {breadcrumb && <span className="cal-event-time">{breadcrumb}</span>}
                           {e.summary || e.title}
-                        </div>
+                        </Wrapper>
                       );
                     })
                 }
