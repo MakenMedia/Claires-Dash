@@ -4,7 +4,6 @@ import StatusDot from '@/components/StatusDot';
 import StatsBar from '@/components/StatsBar';
 import ThisWeek from '@/components/ThisWeek';
 import DailyPriority from '@/components/DailyPriority';
-import OpenTasks from '@/components/OpenTasks';
 import EditedVideos from '@/components/EditedVideos';
 import ClientTaskBoards from '@/components/ClientTaskBoards';
 import FrameioFolders from '@/components/FrameioFolders';
@@ -184,7 +183,6 @@ export default function Home() {
       <div className="main-content">
         <ThisWeek events={calendar?.events || []} fetchedAt={calendar?.fetchedAt || null} fetching={fetchingCal} />
         <DailyPriority tasks={clickup?.dueTodayTasks || []} fetchedAt={clickup?.fetchedAt || null} fetching={fetchingClickup} />
-        <OpenTasks tasks={clickup?.openTasks || []} fetchedAt={clickup?.fetchedAt || null} fetching={fetchingClickup} />
         <EditedVideos fetchedAt={clickup?.fetchedAt || null} fetching={fetchingClickup} />
         <ClientTaskBoards boards={clickup?.clientBoards || []} fetchedAt={clickup?.fetchedAt || null} fetching={fetchingClickup} />
         <FrameioFolders folders={frameio?.folders || CLIENTS.map(c => ({ client: c.name, frameLink: c.frameLink }))} fetchedAt={frameio?.fetchedAt || null} fetching={fetchingFrameio} />
