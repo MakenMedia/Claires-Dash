@@ -23,7 +23,7 @@ export const USERS: UserSession[] = [
     email: '1clairearlandis@gmail.com',
     name: 'Claire',
     role: 'claire',
-    redirectTo: '/',
+    redirectTo: 'https://ops.maken.media',
   },
 ];
 
