@@ -3,6 +3,13 @@ import { verifyToken } from '@/lib/auth';
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
+  const host = req.headers.get('host') || '';
+  const isLoginDomain = host.startsWith('login.');
+
+  // On login.maken.media, root path always goes to /login
+  if (isLoginDomain && pathname === '/') {
+    return NextResponse.redirect(new URL('/login', req.url));
+  }
 
   // Allow login page and auth API through
   if (pathname.startsWith('/login') || pathname.startsWith('/api/auth')) {
