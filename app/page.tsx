@@ -170,6 +170,10 @@ export default function Home() {
             </svg>
             Refresh
           </button>
+          <button onClick={async () => { await fetch('/api/auth/logout', { method: 'POST' }); window.location.href = '/login'; }}
+            style={{ background: 'transparent', border: '1px solid #252a38', borderRadius: 8, color: '#64748b', padding: '7px 14px', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
+            Sign Out
+          </button>
         </div>
       </header>
 
