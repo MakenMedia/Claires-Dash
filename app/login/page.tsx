@@ -28,144 +28,242 @@ export default function LoginPage() {
   }
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: '#0d0f14',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-    }}>
-      {/* Logo */}
-      <div style={{ marginBottom: 32, textAlign: 'center' }}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo.png" alt="Maken Media" style={{ height: 52, width: 'auto' }}
-          onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
-      </div>
+    <>
+      <style>{`
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        body { background: #0d0f14; }
 
-      {/* Card */}
-      <div style={{
-        width: '100%',
-        maxWidth: 380,
-        background: '#111318',
-        border: '1px solid #1e2230',
-        borderRadius: 4,
-        padding: '36px 32px 32px',
-        boxShadow: '0 8px 40px rgba(0,0,0,0.5)',
-      }}>
-        <h1 style={{ fontSize: 13, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.12em', textAlign: 'center', marginBottom: 28 }}>
-          Welcome back
-        </h1>
+        .login-wrap {
+          display: flex;
+          min-height: 100vh;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          background: #13151c;
+        }
 
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          {/* Email field */}
-          <div style={{ position: 'relative' }}>
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              placeholder="Email"
-              style={{
-                width: '100%',
-                background: '#0d0f14',
-                border: '1px solid #1e2230',
-                borderRadius: 3,
-                color: '#e2e8f0',
-                fontSize: 13,
-                padding: '12px 40px 12px 14px',
-                outline: 'none',
-                boxSizing: 'border-box',
-                transition: 'border-color .15s',
-              }}
-              onFocus={e => e.target.style.borderColor = '#5b6af0'}
-              onBlur={e => e.target.style.borderColor = '#1e2230'}
-            />
-            <svg style={{ position: 'absolute', right: 13, top: '50%', transform: 'translateY(-50%)', opacity: 0.3 }}
-              width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#e2e8f0" strokeWidth="2">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-            </svg>
-          </div>
+        /* LEFT PANEL */
+        .login-left {
+          flex: 1;
+          position: relative;
+          background: linear-gradient(160deg, #1a1040 0%, #0d0f14 40%, #1a0d2e 100%);
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          padding: 36px 40px;
+          overflow: hidden;
+          min-height: 100vh;
+        }
+        .login-left::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background:
+            radial-gradient(ellipse at 30% 60%, rgba(91,106,240,0.18) 0%, transparent 60%),
+            radial-gradient(ellipse at 80% 20%, rgba(139,92,246,0.12) 0%, transparent 50%);
+          pointer-events: none;
+        }
+        .left-top {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          position: relative;
+          z-index: 1;
+        }
+        .left-logo img {
+          height: 40px;
+          width: auto;
+        }
+        .back-link {
+          color: #94a3b8;
+          font-size: 13px;
+          font-weight: 500;
+          text-decoration: none;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          transition: color .15s;
+        }
+        .back-link:hover { color: #e2e8f0; }
+        .left-bottom {
+          position: relative;
+          z-index: 1;
+        }
+        .left-tagline {
+          font-size: 28px;
+          font-weight: 800;
+          color: #e2e8f0;
+          line-height: 1.25;
+          letter-spacing: -0.02em;
+          max-width: 280px;
+        }
+        .left-sub {
+          font-size: 13px;
+          color: #64748b;
+          margin-top: 12px;
+          font-weight: 400;
+        }
 
-          {/* Password field */}
-          <div style={{ position: 'relative' }}>
-            <input
-              type="password"
-              required
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              placeholder="Password"
-              style={{
-                width: '100%',
-                background: '#0d0f14',
-                border: '1px solid #1e2230',
-                borderRadius: 3,
-                color: '#e2e8f0',
-                fontSize: 13,
-                padding: '12px 40px 12px 14px',
-                outline: 'none',
-                boxSizing: 'border-box',
-                transition: 'border-color .15s',
-              }}
-              onFocus={e => e.target.style.borderColor = '#5b6af0'}
-              onBlur={e => e.target.style.borderColor = '#1e2230'}
-            />
-            <svg style={{ position: 'absolute', right: 13, top: '50%', transform: 'translateY(-50%)', opacity: 0.3 }}
-              width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#e2e8f0" strokeWidth="2">
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-            </svg>
-          </div>
+        /* RIGHT PANEL */
+        .login-right {
+          width: 460px;
+          flex-shrink: 0;
+          background: #0d0f14;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 60px 48px;
+        }
+        .login-form-wrap {
+          width: 100%;
+          max-width: 340px;
+        }
+        .form-title {
+          font-size: 26px;
+          font-weight: 800;
+          color: #f1f5f9;
+          letter-spacing: -0.02em;
+          margin-bottom: 6px;
+        }
+        .form-sub {
+          font-size: 13px;
+          color: #475569;
+          margin-bottom: 36px;
+        }
+        .input-wrap {
+          position: relative;
+          margin-bottom: 14px;
+        }
+        .input-wrap input {
+          width: 100%;
+          background: #141720;
+          border: 1px solid #1e2535;
+          border-radius: 8px;
+          color: #e2e8f0;
+          font-size: 14px;
+          padding: 13px 42px 13px 16px;
+          outline: none;
+          transition: border-color .15s;
+          font-family: inherit;
+        }
+        .input-wrap input::placeholder { color: #374151; }
+        .input-wrap input:focus { border-color: #5b6af0; }
+        .input-icon {
+          position: absolute;
+          right: 14px;
+          top: 50%;
+          transform: translateY(-50%);
+          opacity: 0.25;
+          pointer-events: none;
+        }
+        .login-btn {
+          width: 100%;
+          background: #5b6af0;
+          color: #fff;
+          border: none;
+          border-radius: 8px;
+          padding: 14px;
+          font-size: 14px;
+          font-weight: 700;
+          cursor: pointer;
+          margin-top: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          transition: background .15s, transform .1s;
+          font-family: inherit;
+          letter-spacing: 0.01em;
+        }
+        .login-btn:hover:not(:disabled) { background: #4a59e8; }
+        .login-btn:active:not(:disabled) { transform: scale(0.99); }
+        .login-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .error-box {
+          background: #ef444415;
+          border: 1px solid #ef444430;
+          border-radius: 6px;
+          padding: 10px 14px;
+          font-size: 12.5px;
+          color: #ef4444;
+          text-align: center;
+          margin-bottom: 14px;
+        }
+        .spinner {
+          width: 13px;
+          height: 13px;
+          border: 2px solid rgba(255,255,255,0.2);
+          border-top-color: #fff;
+          border-radius: 50%;
+          animation: spin .7s linear infinite;
+        }
 
-          {error && (
-            <div style={{ background: '#ef444415', border: '1px solid #ef444430', borderRadius: 3, padding: '9px 12px', fontSize: 12, color: '#ef4444', textAlign: 'center' }}>
-              {error}
+        @media (max-width: 768px) {
+          .login-left { display: none; }
+          .login-right { width: 100%; padding: 40px 28px; }
+        }
+      `}</style>
+
+      <div className="login-wrap">
+        {/* Left panel */}
+        <div className="login-left">
+          <div className="left-top">
+            <div className="left-logo">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/logo.png" alt="Maken Media"
+                onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
             </div>
-          )}
+            <a href="https://maken.media" className="back-link">
+              Back to website
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </a>
+          </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            style={{
-              width: '100%',
-              background: 'transparent',
-              color: '#e2e8f0',
-              border: '1px solid #2d3347',
-              borderRadius: 3,
-              padding: '12px',
-              fontSize: 12,
-              fontWeight: 700,
-              letterSpacing: '0.1em',
-              textTransform: 'uppercase',
-              cursor: loading ? 'not-allowed' : 'pointer',
-              marginTop: 4,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 8,
-              transition: 'border-color .15s, background .15s',
-              opacity: loading ? 0.6 : 1,
-            }}
-            onMouseEnter={e => { if (!loading) { (e.currentTarget as HTMLButtonElement).style.borderColor = '#5b6af0'; (e.currentTarget as HTMLButtonElement).style.color = '#5b6af0'; }}}
-            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = '#2d3347'; (e.currentTarget as HTMLButtonElement).style.color = '#e2e8f0'; }}
-          >
-            {loading && (
-              <div style={{ width: 12, height: 12, border: '2px solid #ffffff30', borderTopColor: '#fff', borderRadius: '50%', animation: 'spin .7s linear infinite' }} />
-            )}
-            {loading ? 'Signing in…' : 'Login'}
-          </button>
-        </form>
+          <div className="left-bottom">
+            <div className="left-tagline">We don&rsquo;t just shoot video.<br />We create impact.</div>
+            <div className="left-sub">Maken Media — Internal Platform</div>
+          </div>
+        </div>
 
-        <p style={{ textAlign: 'center', fontSize: 11, color: '#374151', marginTop: 24, marginBottom: 0 }}>
-          Sign in to your Maken Media account
-        </p>
+        {/* Right panel */}
+        <div className="login-right">
+          <div className="login-form-wrap">
+            <div className="form-title">Welcome back</div>
+            <div className="form-sub">Sign in to your Maken Media account</div>
+
+            <form onSubmit={handleSubmit}>
+              <div className="input-wrap">
+                <input
+                  type="email" required value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  placeholder="Email"
+                />
+                <svg className="input-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#e2e8f0" strokeWidth="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                </svg>
+              </div>
+
+              <div className="input-wrap">
+                <input
+                  type="password" required value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  placeholder="Password"
+                />
+                <svg className="input-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#e2e8f0" strokeWidth="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+              </div>
+
+              {error && <div className="error-box">{error}</div>}
+
+              <button type="submit" className="login-btn" disabled={loading}>
+                {loading && <div className="spinner" />}
+                {loading ? 'Signing in…' : 'Sign In'}
+              </button>
+            </form>
+          </div>
+        </div>
       </div>
-
-      <p style={{ textAlign: 'center', fontSize: 11, color: '#1f2937', marginTop: 24 }}>
-        Maken Media — Internal Platform
-      </p>
-
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-    </div>
+    </>
   );
 }
