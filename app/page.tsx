@@ -7,6 +7,7 @@ import DailyPriority from '@/components/DailyPriority';
 import EditedVideos from '@/components/EditedVideos';
 import ClientTaskBoards from '@/components/ClientTaskBoards';
 import FrameioFolders from '@/components/FrameioFolders';
+import EditorProfiles from '@/components/EditorProfiles';
 import { CLIENTS } from '@/lib/config';
 
 const POLL_CLICKUP = parseInt(process.env.NEXT_PUBLIC_POLL_CLICKUP_MS || '60000');
@@ -62,9 +63,11 @@ export default function Home() {
   const [clickup, setClickup] = useState<ClickUpData | null>(null);
   const [calendar, setCalendar] = useState<CalendarData | null>(null);
   const [frameio, setFrameio] = useState<FrameioData | null>(null);
+  const [editors, setEditors] = useState<{profiles: any[]; fetchedAt: number} | null>(null);
   const [fetchingClickup, setFetchingClickup] = useState(false);
   const [fetchingCal, setFetchingCal] = useState(false);
   const [fetchingFrameio, setFetchingFrameio] = useState(false);
+  const [fetchingEditors, setFetchingEditors] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const failCount = useRef(0);
@@ -99,11 +102,19 @@ export default function Home() {
     } catch { /* ignore */ } finally { setFetchingFrameio(false); }
   }, []);
 
+  const fetchEditors = useCallback(async () => {
+    setFetchingEditors(true);
+    try {
+      const r = await fetch('/api/editors');
+      if (r.ok) setEditors(await r.json());
+    } catch { /* ignore */ } finally { setFetchingEditors(false); }
+  }, []);
+
   const refreshAll = useCallback(async () => {
     setRefreshing(true);
-    await Promise.all([fetchClickup(), fetchCalendar(), fetchFrameio()]);
+    await Promise.all([fetchClickup(), fetchCalendar(), fetchFrameio(), fetchEditors()]);
     setRefreshing(false);
-  }, [fetchClickup, fetchCalendar, fetchFrameio]);
+  }, [fetchClickup, fetchCalendar, fetchFrameio, fetchEditors]);
 
   // Initial load
   useEffect(() => { refreshAll(); }, [refreshAll]);
@@ -186,6 +197,7 @@ export default function Home() {
         <EditedVideos fetchedAt={clickup?.fetchedAt || null} fetching={fetchingClickup} />
         <ClientTaskBoards boards={clickup?.clientBoards || []} fetchedAt={clickup?.fetchedAt || null} fetching={fetchingClickup} />
         <FrameioFolders folders={frameio?.folders || CLIENTS.map(c => ({ client: c.name, frameLink: c.frameLink }))} fetchedAt={frameio?.fetchedAt || null} fetching={fetchingFrameio} />
+        <EditorProfiles profiles={editors?.profiles || []} fetchedAt={editors?.fetchedAt || null} fetching={fetchingEditors} />
       </div>
     </>
   );
