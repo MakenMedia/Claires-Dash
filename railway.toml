@@ -1,7 +1,8 @@
 [deploy]
-healthcheckPath = "/health"
-healthcheckTimeout = 30
+healthcheckPath = "/api/health"
+healthcheckTimeout = 60
 restartPolicyType = "always"
+startCommand = "next start -p ${PORT:-3000}"
 
 [build]
 builder = "nixpacks"
