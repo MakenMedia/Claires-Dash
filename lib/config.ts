@@ -16,5 +16,5 @@ export const EDITORS = [
   { name: 'SLASHER',  id: '94215676',  color: '#f97316' },
   { name: 'Mofe',     id: '94204171',  color: '#22c55e' },
   { name: 'Yacine',   id: '94213231',  color: '#38bdf8' },
-  { name: 'Oliver',   id: '94416842',  color: '#a78bfa' },
+  { name: 'Fareeha',  id: '78106666',  color: '#f472b6' },
 ];
