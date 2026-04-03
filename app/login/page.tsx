@@ -45,7 +45,7 @@ export default function LoginPage() {
         .login-left {
           flex: 1;
           position: relative;
-          background: linear-gradient(160deg, #1a1040 0%, #0d0f14 40%, #1a0d2e 100%);
+          background: linear-gradient(160deg, #1a0a0a 0%, #0d0f14 40%, #1a0505 100%);
           display: flex;
           flex-direction: column;
           justify-content: space-between;
@@ -58,8 +58,8 @@ export default function LoginPage() {
           position: absolute;
           inset: 0;
           background:
-            radial-gradient(ellipse at 30% 60%, rgba(91,106,240,0.18) 0%, transparent 60%),
-            radial-gradient(ellipse at 80% 20%, rgba(139,92,246,0.12) 0%, transparent 50%);
+            radial-gradient(ellipse at 30% 60%, rgba(225,20,24,0.15) 0%, transparent 60%),
+            radial-gradient(ellipse at 80% 20%, rgba(225,20,24,0.08) 0%, transparent 50%);
           pointer-events: none;
         }
         .left-top {
@@ -146,7 +146,7 @@ export default function LoginPage() {
           font-family: inherit;
         }
         .input-wrap input::placeholder { color: #374151; }
-        .input-wrap input:focus { border-color: #5b6af0; }
+        .input-wrap input:focus { border-color: #e11418; }
         .input-icon {
           position: absolute;
           right: 14px;
@@ -157,7 +157,7 @@ export default function LoginPage() {
         }
         .login-btn {
           width: 100%;
-          background: #5b6af0;
+          background: #e11418;
           color: #fff;
           border: none;
           border-radius: 8px;
@@ -174,7 +174,7 @@ export default function LoginPage() {
           font-family: inherit;
           letter-spacing: 0.01em;
         }
-        .login-btn:hover:not(:disabled) { background: #4a59e8; }
+        .login-btn:hover:not(:disabled) { background: #c41013; }
         .login-btn:active:not(:disabled) { transform: scale(0.99); }
         .login-btn:disabled { opacity: 0.6; cursor: not-allowed; }
         .error-box {
