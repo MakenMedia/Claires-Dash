@@ -1,38 +1,67 @@
 'use client';
-import SectionHeader from './SectionHeader';
 
 interface CalEvent { id: string; title?: string; summary?: string; start: string; end: string; allDay?: boolean; }
 interface Props { events: CalEvent[]; fetchedAt: number | null; fetching: boolean; }
 
 export default function ThisWeek({ events, fetchedAt, fetching }: Props) {
-  const days: { label: string; date: string; dayEvents: CalEvent[] }[] = [];
+  const today = new Date();
+  const days: { label: string; dateNum: string; dateStr: string; isToday: boolean; dayEvents: CalEvent[] }[] = [];
+
   for (let i = 0; i < 7; i++) {
-    const d = new Date(); d.setDate(d.getDate() + i);
+    const d = new Date(today);
+    d.setDate(today.getDate() + i);
     const dateStr = d.toISOString().slice(0, 10);
-    const label = i === 0 ? 'Today' : d.toLocaleDateString('en-US', { weekday: 'short' });
+    const label = d.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase();
+    const dateNum = d.getDate().toString();
     const dayEvents = events.filter(e => (e.start || '').slice(0, 10) === dateStr);
-    days.push({ label, date: d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }), dayEvents });
+    days.push({ label, dateNum, dateStr, isToday: i === 0, dayEvents });
   }
 
+  const ago = fetchedAt ? Math.round((Date.now() - fetchedAt) / 60000) : null;
+
   return (
-    <div className="px-8 py-6 border-b border-[#2a2d3e]">
-      <SectionHeader title="This Week" badge={`${events.length} events`} badgeColor="bg-[#5b6af0]" lastFetch={fetchedAt} fetching={fetching} />
-      <div className="grid grid-cols-7 gap-3">
-        {days.map(({ label, date, dayEvents }) => (
-          <div key={date} className="bg-[#1a1d27] border border-[#2a2d3e] rounded-xl p-3 min-h-[100px]">
-            <div className="text-xs font-bold text-[#64748b] mb-1">{label}</div>
-            <div className="text-sm font-semibold text-[#e2e8f0] mb-2">{date}</div>
-            {dayEvents.length === 0 ? null : dayEvents.map(e => {
-              const t = e.allDay ? null : new Date(e.start).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
-              return (
-                <div key={e.id} className="text-xs bg-[#5b6af0]/15 border border-[#5b6af0]/30 rounded p-1 mb-1">
-                  {t && <div className="text-[#5b6af0] font-semibold">{t}</div>}
-                  <div className="text-[#e2e8f0] leading-snug">{e.summary || e.title}</div>
-                </div>
-              );
-            })}
-          </div>
-        ))}
+    <div className="card">
+      <div className="card-header">
+        <div className="card-title">
+          <div className="icon" style={{ background: '#5b6af020' }}>📅</div>
+          This Week
+          <span className="badge">{events.length} events</span>
+          {fetching && <div className="spinner" style={{ width: 14, height: 14 }} />}
+        </div>
+        {fetchedAt && (
+          <span style={{ fontSize: 11, color: 'var(--muted)' }}>
+            {ago === 0 ? 'just now' : `${ago}m ago`}
+          </span>
+        )}
+      </div>
+      <div style={{ padding: '16px 20px' }}>
+        <div className="cal-week">
+          {days.map(({ label, dateNum, isToday, dayEvents }) => (
+            <div key={label + dateNum} className={`cal-day${isToday ? ' today' : ''}`}>
+              <div className="cal-day-header">
+                <span className="cal-day-name">{label}</span>
+                <span className="cal-day-num">{dateNum}</span>
+              </div>
+              <div className="cal-events">
+                {dayEvents.length === 0
+                  ? <div className="cal-empty">—</div>
+                  : dayEvents.map(e => {
+                      const t = e.allDay ? null : (() => {
+                        try { return new Date(e.start).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }); }
+                        catch { return null; }
+                      })();
+                      return (
+                        <div key={e.id} className="cal-event" title={e.summary || e.title}>
+                          {t && <span className="cal-event-time">{t}</span>}
+                          {e.summary || e.title}
+                        </div>
+                      );
+                    })
+                }
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
