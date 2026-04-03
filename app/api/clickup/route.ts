@@ -49,7 +49,14 @@ async function fetchClickUp(): Promise<ClickUpResult> {
   const now = Date.now();
   const today = new Date(); today.setHours(23, 59, 59, 999);
 
-  const mapped: MappedTask[] = tasks.map((t) => {
+  const CLOSED_STATUSES = ['complete', 'completed', 'closed', 'done'];
+
+  const mapped: MappedTask[] = tasks
+  .filter(t => {
+    const s = ((t.status as Record<string, unknown>)?.status as string || '').toLowerCase();
+    return !CLOSED_STATUSES.includes(s);
+  })
+  .map((t) => {
     const status = t.status as Record<string, unknown> | undefined;
     const priority = t.priority as Record<string, unknown> | undefined;
     const list = t.list as Record<string, unknown> | undefined;
@@ -81,8 +88,12 @@ async function fetchClickUp(): Promise<ClickUpResult> {
     };
   });
 
+  // dedupe by id (subtasks can appear twice)
+  const seen = new Set<string>();
+  const deduped = mapped.filter(t => { if (seen.has(t.id)) return false; seen.add(t.id); return true; });
+
   const clientBoards = CLIENTS.map(client => {
-    const clientTasks = mapped.filter(t =>
+    const clientTasks = deduped.filter(t =>
       t.folderName?.toLowerCase().includes(client.clickupName.toLowerCase()) ||
       t.listName?.toLowerCase().includes(client.clickupName.toLowerCase()) ||
       t.spaceName?.toLowerCase().includes(client.clickupName.toLowerCase())
@@ -95,16 +106,16 @@ async function fetchClickUp(): Promise<ClickUpResult> {
     };
   });
 
-  const overdueTasks = mapped.filter(t => t.isOverdue);
-  const dueTodayTasks = mapped.filter(t => t.isDueToday);
+  const overdueTasks = deduped.filter(t => t.isOverdue);
+  const dueTodayTasks = deduped.filter(t => t.isDueToday);
 
   return {
-    openTasks: mapped,
+    openTasks: deduped,
     overdueTasks,
     dueTodayTasks,
     clientBoards,
     stats: {
-      open: mapped.length,
+      open: deduped.length,
       overdue: overdueTasks.length,
     },
     fetchedAt: Date.now(),
