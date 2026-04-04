@@ -68,11 +68,85 @@ export default function LoginPage() {
           position: fixed;
           inset: 0;
           background-image:
-            linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+            linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
           background-size: 80px 80px;
           pointer-events: none;
           z-index: 0;
+        }
+
+        /* Nav */
+        .login-nav {
+          position: fixed;
+          top: 12px; left: 20px; right: 20px;
+          z-index: 100;
+          padding: 0 32px;
+          height: 60px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          background: rgba(5,5,5,0.55);
+          backdrop-filter: blur(24px) saturate(160%);
+          -webkit-backdrop-filter: blur(24px) saturate(160%);
+          border: 1px solid rgba(255,255,255,0.08);
+          border-radius: 16px;
+          box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.03) inset;
+        }
+
+        .nav-logo {
+          font-size: 18px;
+          font-weight: 800;
+          letter-spacing: -0.02em;
+          display: flex;
+          align-items: center;
+          text-decoration: none;
+          color: #fff;
+          font-family: 'Red Hat Display', -apple-system, sans-serif;
+        }
+
+        .nav-dot {
+          display: inline-block;
+          width: 5px; height: 5px;
+          background: #e11418;
+          border-radius: 50%;
+          margin: 0 2px;
+        }
+
+        .nav-links {
+          display: flex;
+          gap: 36px;
+          list-style: none;
+          margin: 0; padding: 0;
+        }
+
+        .nav-links a {
+          font-size: 13px;
+          font-weight: 500;
+          color: rgba(255,255,255,0.5);
+          letter-spacing: 0.02em;
+          text-decoration: none;
+          transition: color 0.2s;
+          font-family: 'Red Hat Display', -apple-system, sans-serif;
+        }
+
+        .nav-links a:hover { color: #fff; }
+
+        .nav-cta {
+          background: #e11418;
+          color: #fff;
+          font-size: 13px;
+          font-weight: 600;
+          padding: 10px 22px;
+          border-radius: 8px;
+          letter-spacing: 0.01em;
+          text-decoration: none;
+          box-shadow: 0 0 16px rgba(225,20,24,0.5), 0 0 40px rgba(225,20,24,0.2);
+          font-family: 'Red Hat Display', -apple-system, sans-serif;
+        }
+
+        @media (max-width: 768px) {
+          .login-nav { padding: 0 20px; }
+          .nav-links { display: none; }
         }
 
         .login-wrap {
@@ -272,6 +346,16 @@ export default function LoginPage() {
       `}</style>
 
       <div className="wrap">
+        <nav className="login-nav">
+          <a href="https://maken-site.vercel.app" className="nav-logo">MAKEN<span className="nav-dot"></span>MEDIA</a>
+          <ul className="nav-links">
+            <li><a href="https://maken-site.vercel.app/#services">Services</a></li>
+            <li><a href="https://maken-site.vercel.app/#work">Work</a></li>
+            <li><a href="https://maken-site.vercel.app/contact">Contact</a></li>
+          </ul>
+          <a href="https://maken-site.vercel.app/contact" className="nav-cta">Book a Call</a>
+        </nav>
+
         <div className="login-wrap">
 
           <a href="/" className="login-logo">
