@@ -31,23 +31,32 @@ export default function EditorProfiles({ profiles, fetchedAt, fetching }: Props)
           </span>
         )}
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: 1, background: 'var(--border)' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 14, padding: 20, alignItems: 'start' }}>
         {profiles.map(editor => (
-          <div key={editor.id} style={{ background: 'var(--card)', padding: '16px 20px' }}>
+          <div key={editor.id} style={{
+            background: 'rgba(255,255,255,0.03)',
+            border: '1px solid rgba(255,255,255,0.06)',
+            borderRadius: 14,
+            padding: '16px 18px',
+          }}>
             {/* Editor header */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
               <div style={{
                 width: 36, height: 36, borderRadius: 10,
                 background: editor.color + '25',
                 border: `1px solid ${editor.color}50`,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 14, fontWeight: 700, color: editor.color, flexShrink: 0,
+                fontSize: 13, fontWeight: 800, color: editor.color, flexShrink: 0,
+                letterSpacing: '0.02em',
               }}>
                 {editor.name.slice(0, 2).toUpperCase()}
               </div>
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)' }}>{editor.name}</div>
-                <div style={{ fontSize: 11, color: 'var(--muted)' }}>{editor.openCount} tasks{editor.overdueCount > 0 ? ` · ` : ''}{editor.overdueCount > 0 && <span style={{ color: 'var(--red)', fontWeight: 600 }}>{editor.overdueCount} overdue</span>}</div>
+                <div style={{ fontSize: 14, fontWeight: 800, color: '#fff' }}>{editor.name}</div>
+                <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 2 }}>
+                  {editor.openCount} {editor.openCount === 1 ? 'task' : 'tasks'}
+                  {editor.overdueCount > 0 && <> · <span style={{ color: 'var(--red)', fontWeight: 700 }}>{editor.overdueCount} overdue</span></>}
+                </div>
               </div>
             </div>
 
