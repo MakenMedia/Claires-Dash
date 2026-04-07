@@ -4,7 +4,7 @@ import { CLIENTS } from '@/lib/config';
 
 const SAM_API = 'https://dashboard.maken.media/api/deliverables';
 
-interface DeliverableRow { shorts: number; longform: number; ready: number; readylongform: number; }
+interface DeliverableRow { shorts?: number; longform?: number; ready?: number; readylongform?: number; }
 type DeliverableStore = Record<string, DeliverableRow>;
 
 interface Props { fetchedAt: number | null; fetching: boolean; }
@@ -20,7 +20,11 @@ export default function EditedVideos({ fetchedAt, fetching }: Props) {
     } catch { /* use defaults */ }
   }, []);
 
-  useEffect(() => { loadData(); }, [loadData]);
+  useEffect(() => {
+    loadData();
+    const t = setInterval(loadData, 30000);
+    return () => clearInterval(t);
+  }, [loadData]);
 
   const handleChange = async (clientName: string, field: string, value: number) => {
     // Optimistic update
@@ -73,12 +77,14 @@ export default function EditedVideos({ fetchedAt, fetching }: Props) {
           const ready = d.ready || 0;
           const readylongform = d.readylongform || 0;
           const totalReady = ready + readylongform;
-          const readyColor = totalReady >= client.needed ? 'var(--green)' : totalReady > 0 ? 'var(--orange)' : client.needed > 0 ? 'var(--red)' : 'var(--muted)';
+          // "Needed" is dynamic: shorts+longform from Sam's dashboard (KV), falling back to config default
+          const dynamicNeeded = (d.shorts ?? client.needed) + (d.longform ?? 0);
+          const readyColor = totalReady >= dynamicNeeded ? 'var(--green)' : totalReady > 0 ? 'var(--orange)' : dynamicNeeded > 0 ? 'var(--red)' : 'var(--muted)';
 
           return (
             <div key={client.name} className="deliverables-row" style={{ gridTemplateColumns: '1fr 70px 110px 100px 90px' }}>
               <span className="del-client">{client.name}</span>
-              <span className="del-col" style={{ color: 'var(--muted)', fontSize: 13 }}>{client.needed}</span>
+              <span className="del-col" style={{ color: 'var(--muted)', fontSize: 13 }}>{dynamicNeeded}</span>
               <span className="del-col">
                 <input className="del-input" type="number" min="0"
                   value={ready}
