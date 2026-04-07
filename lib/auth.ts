@@ -23,7 +23,7 @@ export const USERS: UserSession[] = [
     email: '1clairearlandis@gmail.com',
     name: 'Claire',
     role: 'claire',
-    redirectTo: 'https://claires-dash.vercel.app',
+    redirectTo: 'https://ops.maken.media',
   },
 ];
 
