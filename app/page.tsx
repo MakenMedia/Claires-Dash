@@ -65,6 +65,7 @@ export default function Home() {
   const [calendar, setCalendar] = useState<CalendarData | null>(null);
   const [frameio, setFrameio] = useState<FrameioData | null>(null);
   const [editors, setEditors] = useState<{profiles: any[]; fetchedAt: number} | null>(null);
+  const [deliverables, setDeliverables] = useState<Record<string, { shorts?: number; longform?: number; ready?: number; readylongform?: number }>>({});
   const [fetchingClickup, setFetchingClickup] = useState(false);
   const [fetchingCal, setFetchingCal] = useState(false);
   const [fetchingFrameio, setFetchingFrameio] = useState(false);
@@ -85,6 +86,13 @@ export default function Home() {
       failCount.current++;
       if (failCount.current >= 3) setIsPaused(true);
     } finally { setFetchingClickup(false); }
+  }, []);
+
+  const fetchDeliverables = useCallback(async () => {
+    try {
+      const r = await fetch('https://dashboard.maken.media/api/deliverables', { cache: 'no-store' });
+      if (r.ok) setDeliverables(await r.json());
+    } catch { /* ignore */ }
   }, []);
 
   const fetchCalendar = useCallback(async () => {
@@ -113,9 +121,9 @@ export default function Home() {
 
   const refreshAll = useCallback(async () => {
     setRefreshing(true);
-    await Promise.all([fetchClickup(), fetchCalendar(), fetchFrameio(), fetchEditors()]);
+    await Promise.all([fetchClickup(), fetchCalendar(), fetchFrameio(), fetchEditors(), fetchDeliverables()]);
     setRefreshing(false);
-  }, [fetchClickup, fetchCalendar, fetchFrameio, fetchEditors]);
+  }, [fetchClickup, fetchCalendar, fetchFrameio, fetchEditors, fetchDeliverables]);
 
   // Initial load
   useEffect(() => { refreshAll(); }, [refreshAll]);
@@ -125,8 +133,9 @@ export default function Home() {
     const t1 = setInterval(() => { if (!isPaused) fetchClickup(); }, POLL_CLICKUP);
     const t2 = setInterval(() => fetchCalendar(), POLL_CALENDAR);
     const t3 = setInterval(() => fetchFrameio(), POLL_FRAMEIO);
-    return () => { clearInterval(t1); clearInterval(t2); clearInterval(t3); };
-  }, [fetchClickup, fetchCalendar, fetchFrameio, isPaused]);
+    const t4 = setInterval(() => fetchDeliverables(), 30000);
+    return () => { clearInterval(t1); clearInterval(t2); clearInterval(t3); clearInterval(t4); };
+  }, [fetchClickup, fetchCalendar, fetchFrameio, fetchDeliverables, isPaused]);
 
   // Tab refocus
   useEffect(() => {
@@ -135,12 +144,19 @@ export default function Home() {
     return () => document.removeEventListener('visibilitychange', onVisible);
   }, [refreshAll]);
 
-  const totalNeeded = CLIENTS.reduce((s, c) => s + c.needed, 0);
+  const totalNeeded = CLIENTS.reduce((s, c) => {
+    const d = deliverables[c.name];
+    return s + ((d?.shorts ?? c.needed) + (d?.longform ?? 0));
+  }, 0);
+  const totalReady = CLIENTS.reduce((s, c) => {
+    const d = deliverables[c.name];
+    return s + (d?.ready ?? 0) + (d?.readylongform ?? 0);
+  }, 0);
   const stats = {
     open: clickup?.stats.open || 0,
     overdue: clickup?.stats.overdue || 0,
     totalNeeded,
-    totalReady: 0,
+    totalReady,
   };
 
   const clickupStatus: 'ok' | 'stale' | 'error' | 'unknown' =
