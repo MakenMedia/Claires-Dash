@@ -64,6 +64,7 @@ async function fetchClickUp(): Promise<ClickUpResult> {
 
   const now = Date.now();
   const today = new Date(); today.setHours(23, 59, 59, 999);
+  const weekEnd = today.getTime() + 6 * 24 * 60 * 60 * 1000; // 7-day window (today + 6)
 
   const CLOSED_STATUSES = ['complete', 'completed', 'closed', 'done'];
 
@@ -88,7 +89,7 @@ async function fetchClickUp(): Promise<ClickUpResult> {
       statusColor: (status?.color as string) || '#64748b',
       dueDate,
       isOverdue: dueDate ? dueDate < now : false,
-      isDueToday: dueDate ? dueDate <= today.getTime() : false,
+      isDueToday: dueDate ? dueDate <= weekEnd : false,
       priority: (priority?.priority as string) || 'normal',
       priorityColor: (priority?.color as string) || '#64748b',
       listName: (list?.name as string) || '',
@@ -129,7 +130,7 @@ async function fetchClickUp(): Promise<ClickUpResult> {
         statusColor: (status?.color as string) || '#64748b',
         dueDate,
         isOverdue: dueDate ? dueDate < now : false,
-        isDueToday: dueDate ? dueDate <= today.getTime() : false,
+        isDueToday: dueDate ? dueDate <= weekEnd : false,
         priority: (priority?.priority as string) || 'normal',
         priorityColor: (priority?.color as string) || '#64748b',
         listName: (list?.name as string) || '',

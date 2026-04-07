@@ -38,7 +38,7 @@ export default function DailyPriority({ tasks, fetchedAt, fetching }: Props) {
       <div className="card-header">
         <div className="card-title">
           <div className="icon" style={{ background: '#ef444420' }}>🔥</div>
-          Daily Priority — Overdue &amp; Due Today
+          Priority — Overdue &amp; Due This Week
           <span className="badge">{sorted.length}</span>
           {fetching && <div className="spinner" style={{ width: 14, height: 14 }} />}
         </div>
