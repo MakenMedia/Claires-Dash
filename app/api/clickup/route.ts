@@ -18,6 +18,7 @@ interface MappedTask {
   priorityColor: string;
   listName: string;
   folderName: string;
+  folderId: string;
   spaceName: string;
   assignees: { id: string; name: string; color: string; initials: string }[];
   url: string;
@@ -94,6 +95,7 @@ async function fetchClickUp(): Promise<ClickUpResult> {
       priorityColor: (priority?.color as string) || '#64748b',
       listName: (list?.name as string) || '',
       folderName: (folder?.name as string) || '',
+      folderId: (folder?.id as string) || '',
       spaceName: (space?.name as string) || '',
       assignees: assignees.map((a) => ({
         id: a.id as string,
@@ -135,6 +137,7 @@ async function fetchClickUp(): Promise<ClickUpResult> {
         priorityColor: (priority?.color as string) || '#64748b',
         listName: (list?.name as string) || '',
         folderName: (folder?.name as string) || '',
+      folderId: (folder?.id as string) || '',
         spaceName: (space?.name as string) || '',
         assignees: assignees.map((a) => ({
           id: a.id as string,
@@ -149,11 +152,17 @@ async function fetchClickUp(): Promise<ClickUpResult> {
   const allDeduped = allMapped.filter(t => { if (allSeen.has(t.id)) return false; allSeen.add(t.id); return true; });
 
   const clientBoards = CLIENTS.map(client => {
-    const clientTasks = allDeduped.filter(t =>
-      t.folderName?.toLowerCase().includes(client.clickupName.toLowerCase()) ||
-      t.listName?.toLowerCase().includes(client.clickupName.toLowerCase()) ||
-      t.spaceName?.toLowerCase().includes(client.clickupName.toLowerCase())
-    );
+    const clientTasks = allDeduped.filter(t => {
+      // Match by folder ID first (exact, reliable)
+      if (client.folderId && t.folderId === client.folderId) return true;
+      // Fallback: name contains
+      const cn = client.clickupName.toLowerCase();
+      return (
+        t.folderName?.toLowerCase().includes(cn) ||
+        t.listName?.toLowerCase().includes(cn) ||
+        t.spaceName?.toLowerCase().includes(cn)
+      );
+    });
     return {
       client: client.name,
       tasks: clientTasks,
