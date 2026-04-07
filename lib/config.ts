@@ -1,5 +1,5 @@
 export const CLIENTS = [
-  { name: 'Rising Tide',    frameLink: 'https://f.io/S4PBXN7H', clickupName: 'Rising Tide',    needed: 5, marketResearch: null },
+  { name: 'Rising Tide',    frameLink: 'https://f.io/S4PBXN7H', clickupName: 'Rising Tide',    needed: 5, marketResearch: 'https://docs.google.com/spreadsheets/d/1M1ssrTQ4Ccj0aScFQ1ak3ml-F-VXuNpWeobcSANPmGw/edit?usp=sharing' },
   { name: 'Aquatic Pools',  frameLink: 'https://f.io/35-vyrre',  clickupName: 'Aquatic',         needed: 5, marketResearch: 'https://docs.google.com/spreadsheets/d/1mnrFPzHom-2cJfd0ciXmTB4fMUIWhRuw4YMVZeLC6GM/edit?usp=sharing' },
   { name: 'Jake Setterlun', frameLink: 'https://f.io/8ZpSXX0z', clickupName: 'Jake Sutherland', needed: 7, marketResearch: 'https://docs.google.com/spreadsheets/d/1cjfus8CRA6iloY9bqZWlxcsqr7c1jUYwyXZwQok5_is/edit?usp=sharing' },
   { name: 'OI',             frameLink: 'https://f.io/0x_iPrVN', clickupName: 'Outsiders Immortal', needed: 5, marketResearch: null },
