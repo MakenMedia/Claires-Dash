@@ -37,14 +37,30 @@ interface ClickUpResult {
   fetchedAt: number;
 }
 
+async function fetchTeamTasks(headers: Record<string, string>, assigneeId?: string): Promise<Record<string, unknown>[]> {
+  const all: Record<string, unknown>[] = [];
+  for (let page = 0; page < 5; page++) {
+    const assigneeParam = assigneeId ? `&assignees[]=${assigneeId}` : '';
+    const url = `https://api.clickup.com/api/v2/team/${TEAM_ID}/task?include_closed=false&subtasks=true&page=${page}${assigneeParam}`;
+    const r = await fetch(url, { headers });
+    if (!r.ok) throw new Error(`ClickUp ${r.status}`);
+    const json = await r.json();
+    const pageTasks: Record<string, unknown>[] = json.tasks || [];
+    all.push(...pageTasks);
+    if (pageTasks.length < 100) break;
+  }
+  return all;
+}
+
 async function fetchClickUp(): Promise<ClickUpResult> {
   const headers = { Authorization: TOKEN };
 
-  const url = `https://api.clickup.com/api/v2/team/${TEAM_ID}/task?assignees[]=${CLAIRE_CLICKUP_ID}&include_closed=false&subtasks=true&page=0`;
-  const r = await fetch(url, { headers });
-  if (!r.ok) throw new Error(`ClickUp ${r.status}`);
-  const json = await r.json();
-  const tasks: Record<string, unknown>[] = json.tasks || [];
+  // Fetch in parallel: Claire's assigned tasks + ALL team tasks (for client boards)
+  const [claireTasks, allTeamTasks] = await Promise.all([
+    fetchTeamTasks(headers, CLAIRE_CLICKUP_ID),
+    fetchTeamTasks(headers),
+  ]);
+  const tasks = claireTasks;
 
   const now = Date.now();
   const today = new Date(); today.setHours(23, 59, 59, 999);
@@ -92,8 +108,47 @@ async function fetchClickUp(): Promise<ClickUpResult> {
   const seen = new Set<string>();
   const deduped = mapped.filter(t => { if (seen.has(t.id)) return false; seen.add(t.id); return true; });
 
+  // Map ALL team tasks (unfiltered) for client boards
+  const allMapped: MappedTask[] = allTeamTasks
+    .filter(t => {
+      const s = ((t.status as Record<string, unknown>)?.status as string || '').toLowerCase();
+      return !CLOSED_STATUSES.includes(s);
+    })
+    .map((t) => {
+      const status = t.status as Record<string, unknown> | undefined;
+      const priority = t.priority as Record<string, unknown> | undefined;
+      const list = t.list as Record<string, unknown> | undefined;
+      const folder = t.folder as Record<string, unknown> | undefined;
+      const space = t.space as Record<string, unknown> | undefined;
+      const assignees = (t.assignees as Record<string, unknown>[]) || [];
+      const dueDate = t.due_date ? parseInt(t.due_date as string) : null;
+      return {
+        id: t.id as string,
+        name: t.name as string,
+        status: (status?.status as string) || '',
+        statusColor: (status?.color as string) || '#64748b',
+        dueDate,
+        isOverdue: dueDate ? dueDate < now : false,
+        isDueToday: dueDate ? dueDate <= today.getTime() : false,
+        priority: (priority?.priority as string) || 'normal',
+        priorityColor: (priority?.color as string) || '#64748b',
+        listName: (list?.name as string) || '',
+        folderName: (folder?.name as string) || '',
+        spaceName: (space?.name as string) || '',
+        assignees: assignees.map((a) => ({
+          id: a.id as string,
+          name: a.username as string,
+          color: a.color as string,
+          initials: a.initials as string,
+        })),
+        url: t.url as string,
+      };
+    });
+  const allSeen = new Set<string>();
+  const allDeduped = allMapped.filter(t => { if (allSeen.has(t.id)) return false; allSeen.add(t.id); return true; });
+
   const clientBoards = CLIENTS.map(client => {
-    const clientTasks = deduped.filter(t =>
+    const clientTasks = allDeduped.filter(t =>
       t.folderName?.toLowerCase().includes(client.clickupName.toLowerCase()) ||
       t.listName?.toLowerCase().includes(client.clickupName.toLowerCase()) ||
       t.spaceName?.toLowerCase().includes(client.clickupName.toLowerCase())
