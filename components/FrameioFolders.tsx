@@ -41,10 +41,10 @@ export default function FrameioFolders({ folders, fetchedAt, fetching }: Props) 
                 {research ? (
                   <a href={research} target="_blank" rel="noopener noreferrer"
                     style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, fontWeight: 700, color: '#38bdf8', textDecoration: 'none', padding: '6px 10px', background: 'rgba(56,189,248,0.08)', border: '1px solid rgba(56,189,248,0.2)', borderRadius: 8 }}>
-                    📊 Market Research
+                    📊 Content Strategy
                   </a>
                 ) : (
-                  <span style={{ fontSize: 10, color: 'var(--text-faint)', padding: '6px 10px' }}>No research yet</span>
+                  <span style={{ fontSize: 10, color: 'var(--text-faint)', padding: '6px 10px' }}>No strategy yet</span>
                 )}
               </div>
             </div>
