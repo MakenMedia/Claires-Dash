@@ -2,7 +2,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { CLIENTS } from '@/lib/config';
 
-const SAM_API = 'https://maken-dashboard-production.up.railway.app/api/deliverables';
+const SAM_API = 'https://dashboard.maken.media/api/deliverables';
 
 interface DeliverableRow { shorts: number; longform: number; ready: number; readylongform: number; }
 type DeliverableStore = Record<string, DeliverableRow>;
