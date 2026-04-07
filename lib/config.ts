@@ -5,7 +5,7 @@ export const CLIENTS = [
   { name: 'OI',             frameLink: 'https://f.io/0x_iPrVN', folderId: '90147506230', clickupName: 'OI', needed: 5, marketResearch: null },
   { name: 'Liferx',         frameLink: 'https://f.io/-2RBnJ9V', folderId: '90147506214', clickupName: 'Liferx',          needed: 5, marketResearch: null },
   { name: 'Rootlabs',       frameLink: 'https://f.io/TIPXW8sM', folderId: '90147506307', clickupName: 'Rootlabs',        needed: 3, marketResearch: null },
-  { name: 'Crush',          frameLink: 'https://f.io/Jv6AC_4s', folderId: '90147506285', clickupName: 'Crush',           needed: 3, marketResearch: null },
+  { name: 'Crush',          frameLink: 'https://f.io/Jv6AC_4s', folderId: '90147506285', clickupName: 'Crush',           needed: 3, marketResearch: 'https://docs.google.com/document/d/15jV3QLArvONJAjHBV-zDc1bTfPfFX1zz-905ShzCI3Y/edit?usp=sharing' },
   { name: 'GoodMatter',     frameLink: null,                     folderId: '90147512051', clickupName: 'GoodMatter',      needed: 3, marketResearch: null },
   { name: 'Jeff Delgado',   frameLink: null,                     folderId: '90147507393', clickupName: 'Jeff Delgado',    needed: 3, marketResearch: null },
 ];
