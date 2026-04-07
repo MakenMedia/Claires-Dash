@@ -61,44 +61,32 @@ export default function EditedVideos({ fetchedAt, fetching }: Props) {
         </div>
       </div>
       <div className="deliverables-table">
-        <div className="deliverables-header">
+        <div className="deliverables-header" style={{ gridTemplateColumns: '1fr 70px 110px 100px 90px' }}>
           <span className="del-client">Client</span>
           <span>Needed</span>
-          <span>Shorts</span>
-          <span>Long Form</span>
-          <span></span>
           <span>Ready Shorts</span>
           <span>Ready LF</span>
           <span>Total Ready</span>
         </div>
         {CLIENTS.map(client => {
-          const d = data[client.name] || { shorts: 0, longform: 0, ready: 0, readylongform: 0 };
-          const totalReady = d.ready + d.readylongform;
+          const d = data[client.name] || {};
+          const ready = d.ready || 0;
+          const readylongform = d.readylongform || 0;
+          const totalReady = ready + readylongform;
           const readyColor = totalReady >= client.needed ? 'var(--green)' : totalReady > 0 ? 'var(--orange)' : client.needed > 0 ? 'var(--red)' : 'var(--muted)';
 
           return (
-            <div key={client.name} className="deliverables-row">
+            <div key={client.name} className="deliverables-row" style={{ gridTemplateColumns: '1fr 70px 110px 100px 90px' }}>
               <span className="del-client">{client.name}</span>
               <span className="del-col" style={{ color: 'var(--muted)', fontSize: 13 }}>{client.needed}</span>
               <span className="del-col">
                 <input className="del-input" type="number" min="0"
-                  value={d.shorts}
-                  onChange={e => handleChange(client.name, 'shorts', Math.max(0, parseInt(e.target.value) || 0))} />
-              </span>
-              <span className="del-col">
-                <input className="del-input" type="number" min="0"
-                  value={d.longform}
-                  onChange={e => handleChange(client.name, 'longform', Math.max(0, parseInt(e.target.value) || 0))} />
-              </span>
-              <div className="del-divider" />
-              <span className="del-col">
-                <input className="del-input" type="number" min="0"
-                  value={d.ready}
+                  value={ready}
                   onChange={e => handleChange(client.name, 'ready', Math.max(0, parseInt(e.target.value) || 0))} />
               </span>
               <span className="del-col">
                 <input className="del-input" type="number" min="0"
-                  value={d.readylongform}
+                  value={readylongform}
                   onChange={e => handleChange(client.name, 'readylongform', Math.max(0, parseInt(e.target.value) || 0))} />
               </span>
               <span className="del-col del-total" style={{ color: readyColor, fontSize: 15, fontWeight: 800 }}>{totalReady}</span>
