@@ -24,7 +24,6 @@ export async function POST(req: NextRequest) {
     sameSite: 'lax',
     maxAge: 60 * 60 * 24 * 7, // 7 days
     path: '/',
-    domain: process.env.NODE_ENV === 'production' ? '.maken.media' : undefined,
   });
   return res;
 }
