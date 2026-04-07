@@ -7,7 +7,7 @@ export default function StatsBar({ stats }: Props) {
     { label: 'Open Tasks',    value: stats.open,        color: '#5b6af0' },
     { label: 'Overdue',       value: stats.overdue,     color: '#ef4444' },
     { label: 'Total Needed',  value: stats.totalNeeded, color: stats.totalNeeded > 0 ? '#f97316' : '#22c55e' },
-    { label: 'Total Ready',   value: stats.totalReady,  color: stats.totalReady >= stats.totalNeeded && stats.totalNeeded > 0 ? '#22c55e' : '#f97316' },
+    { label: 'Total Ready',   value: stats.totalReady,  color: '#22c55e' },
   ];
   return (
     <div className="stats-bar">
